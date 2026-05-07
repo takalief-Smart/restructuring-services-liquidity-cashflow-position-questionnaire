@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استبيان وضع السيولة والتدفقات النقدية - إعادة الهيكلة | تكاليف</title>
+    <!-- Bootstrap RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- SheetJS -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1e4a3b 0%, #2d6a4e 100%);
+            min-height: 100vh;
+            color: #1e3a3a;
+            padding: 20px;
+        }
+        
+        .main-header {
+            background: linear-gradient(135deg, #0e3b2c 0%, #1b5e3f 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 50px 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-bottom: 3px solid #52b788;
+        }
+        
+        .company-badge {
+            background: rgba(82, 183, 136, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 600;
+            border: 1px solid #52b788;
+            color: white;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+            margin-bottom: 2rem;
+            background-color: #f8faf8;
+            border: 1px solid #e4f2e4;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #1e4a3b 0%, #2d6a4e 100%);
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            border-bottom: 2px solid #52b788;
+        }
+        
+        .btn-custom {
+            background: #52b788;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid #1e4a3b;
+        }
+        
+        .btn-custom:hover {
+            background: #2d6a4e;
+            transform: scale(1.05);
+            color: white;
+            box-shadow: 0 5px 20px rgba(82, 183, 136, 0.4);
+        }
+        
+        .btn-excel {
+            background: #1e4a3b;
+            color: white;
+            border: 2px solid #52b788;
+        }
+        
+        .btn-excel:hover {
+            background: #2d6a4e;
+            color: white;
+        }
+        
+        .btn-pdf {
+            background: #4a6b5a;
+            color: white;
+            border: 2px solid #52b788;
+        }
+        
+        .btn-pdf:hover {
+            background: #1e4a3b;
+            color: white;
+        }
+        
+        .form-label {
+            color: #2d6a4e;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e4f2e4;
+            border-radius: 10px;
+            padding: 0.75rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #52b788;
+            box-shadow: 0 0 0 0.2rem rgba(82, 183, 136, 0.25);
+        }
+        
+        .data-entry-section {
+            background: #f0f7f0;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 3px solid #52b788;
+        }
+        
+        .client-info-card {
+            background: linear-gradient(135deg, #f8faf8 0%, #ffffff 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 2px solid #52b788;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        .client-info-title {
+            color: #1e4a3b;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .client-info-title i {
+            color: #52b788;
+            margin-left: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .required-field::after {
+            content: "*";
+            color: #dc3545;
+            margin-right: 4px;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #0e3b2c 0%, #1b5e3f 100%);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+            border-radius: 50px 50px 0 0;
+            border-top: 3px solid #52b788;
+        }
+        
+        .footer-links {
+            color: #e4f2e4;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links:hover {
+            color: #52b788;
+            padding-right: 5px;
+        }
+        
+        .contact-item {
+            margin-bottom: 10px;
+            color: #e4f2e4;
+        }
+        
+        .contact-item i {
+            color: #52b788;
+            margin-left: 10px;
+            width: 20px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(82, 183, 136, 0.2);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            color: #52b788;
+            transition: all 0.3s ease;
+            border: 1px solid #52b788;
+        }
+        
+        .social-icon:hover {
+            background: #52b788;
+            color: #0e3b2c;
+            transform: translateY(-3px);
+        }
+        
+        .nav-tabs-custom {
+            border-bottom: 3px solid #52b788;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #1e4a3b 0%, #2d6a4e 100%);
+            border-radius: 50px;
+            padding: 0.5rem;
+        }
+        
+        .nav-tabs-custom .nav-link {
+            color: white !important;
+            font-weight: 600;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs-custom .nav-link i {
+            color: white;
+        }
+        
+        .nav-tabs-custom .nav-link.active {
+            color: #1e4a3b !important;
+            background: #52b788;
+            border: 2px solid white;
+        }
+        
+        .nav-tabs-custom .nav-link.active i {
+            color: #1e4a3b;
+        }
+        
+        .preview-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 2px solid #52b788;
+            margin-bottom: 1.5rem;
+        }
+        
+        .preview-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed #e4f2e4;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .preview-label {
+            font-weight: 600;
+            color: #1e4a3b;
+            width: 45%;
+        }
+        
+        .preview-value {
+            color: #2d6a4e;
+            width: 55%;
+            text-align: left;
+        }
+        
+        .cash-item {
+            background: #f8faf8;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e4f2e4;
+        }
+        
+        .liquidity-badge {
+            background: #52b788;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .warning-badge {
+            background: #e67e22;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .critical-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        /* PDF Export Container */
+        #pdf-export-container {
+            position: fixed;
+            top: -99999px;
+            left: -99999px;
+            width: 800px;
+            background: white;
+            z-index: 9999;
+            padding: 30px;
+            opacity: 0;
+            pointer-events: none;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .pdf-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            direction: rtl;
+        }
+        
+        .pdf-cover {
+            background: linear-gradient(135deg, #0e3b2c 0%, #1b5e3f 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            border: 4px solid #52b788;
+            text-align: center;
+        }
+        
+        .pdf-section-title {
+            color: #1e4a3b;
+            font-size: 20px;
+            font-weight: 800;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #52b788;
+        }
+        
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 12px;
+            border: 1px solid #52b788;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .pdf-table th {
+            background: #1e4a3b;
+            color: white;
+            padding: 10px 8px;
+            font-weight: 700;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .pdf-table td {
+            padding: 8px;
+            border: 1px solid #e4f2e4;
+            text-align: center;
+            font-size: 11px;
+        }
+        
+        .pdf-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #0e3b2c 0%, #1b5e3f 100%);
+            color: white;
+            border-radius: 15px;
+            border: 2px solid #52b788;
+        }
+        
+        .currency-symbol {
+            font-weight: 600;
+        }
+        
+        .ratio-card {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #52b788;
+        }
+        
+        .ratio-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e4a3b;
+        }
+        
+        .ratio-label {
+            font-size: 0.8rem;
+            color: #2d6a4e;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="main-header text-center no-print">
+        <div class="container">
+            <span class="company-badge mb-3">تكاليف | حلول أعمال ذكية</span>
+            <h1 class="display-4 fw-bold mt-3" style="color: white;">
+                <i class="fas fa-water me-3"></i>
+                استبيان وضع السيولة والتدفقات النقدية
+            </h1>
+            <p class="lead" style="color: white;">خدمة الاستشارات المؤقتة لإعادة الهيكلة - تحليل السيولة وإدارة التدفقات النقدية</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Tabs -->
+        <ul class="nav nav-tabs-custom nav-fill" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="data-entry-tab" data-bs-toggle="tab" data-bs-target="#dataEntry" type="button" role="tab">
+                    <i class="fas fa-edit me-2"></i> استبيان المعلومات
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab">
+                    <i class="fas fa-eye me-2"></i> معاينة التقرير
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- Tab 1: Data Entry -->
+            <div class="tab-pane fade show active" id="dataEntry" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-water me-2"></i> استبيان وضع السيولة والتدفقات النقدية - إعادة الهيكلة
+                    </div>
+                    <div class="card-body">
+                        <!-- بيانات المنشأة -->
+                        <div class="client-info-card">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="client-info-title"><i class="fas fa-building"></i> بيانات المنشأة</div>
+                                    <div class="mb-3"><label class="form-label required-field">اسم المنشأة</label><input type="text" class="form-control" id="companyName" placeholder="أدخل اسم المنشأة"></div>
+                                    <div class="mb-3"><label class="form-label">النشاط الرئيسي</label><input type="text" class="form-control" id="businessActivity" placeholder="مثال: تصنيع / تجارة / خدمات"></div>
+                                    <div class="mb-3"><label class="form-label">السنة المالية الحالية</label><input type="text" class="form-control" id="currentFiscalYear" placeholder="مثال: 2025"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="client-info-title"><i class="fas fa-address-card"></i> بيانات المسؤول</div>
+                                    <div class="mb-3"><label class="form-label required-field">اسم المسؤول عن السيولة والتدفقات</label><input type="text" class="form-control" id="contactPerson" placeholder="أدخل اسم المسؤول"></div>
+                                    <div class="mb-3"><label class="form-label required-field">المسمى الوظيفي</label><input type="text" class="form-control" id="jobTitle" placeholder="مثال: المدير المالي / مدير الخزانة"></div>
+                                    <div class="mb-3"><label class="form-label required-field">البريد الإلكتروني</label><input type="email" class="form-control" id="clientEmail" placeholder="example@company.com"></div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-4"><div class="mb-3"><label class="form-label">رقم الهاتف</label><input type="tel" class="form-control" id="clientPhone" placeholder="رقم الهاتف"></div></div>
+                                <div class="col-md-4"><div class="mb-3"><label class="form-label">تاريخ التعبئة</label><input type="date" class="form-control" id="submissionDate" value="2026-03-28"></div></div>
+                                <div class="col-md-4"><div class="mb-3"><label class="form-label">العملة المستخدمة</label><select class="form-select" id="currencySelect"><option value="EGP" selected>جنيه مصري (EGP)</option><option value="SAR">ريال سعودي (SAR)</option><option value="AED">درهم إماراتي (AED)</option><option value="USD">دولار أمريكي (USD)</option></select></div></div>
+                            </div>
+                        </div>
+
+                        <!-- القسم الأول: المركز النقدي الحالي -->
+                        <div class="data-entry-section">
+                            <h4 class="mb-4" style="color: #1e4a3b;"><i class="fas fa-coins me-2"></i> القسم الأول: المركز النقدي الحالي</h4>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3"><label class="form-label">الأرصدة النقدية بالصناديق</label><div class="input-group"><input type="text" class="form-control" id="cashOnHand" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3"><label class="form-label">الأرصدة البنكية</label><div class="input-group"><input type="text" class="form-control" id="bankBalances" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3"><label class="form-label">شهادات إيداع / ودائع لأجل</label><div class="input-group"><input type="text" class="form-control" id="timeDeposits" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3"><label class="form-label"><strong>إجمالي السيولة النقدية المتاحة</strong></label><div class="input-group"><input type="text" class="form-control" id="totalLiquidity" placeholder="سيتم حسابه تلقائياً" readonly style="background:#f0f0f0;"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- القسم الثاني: حسابات القبض والمدفوعات -->
+                        <div class="data-entry-section">
+                            <h4 class="mb-4" style="color: #1e4a3b;"><i class="fas fa-file-invoice-dollar me-2"></i> القسم الثاني: حسابات القبض والمدفوعات</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">إجمالي حسابات القبض (العملاء)</label><div class="input-group"><input type="text" class="form-control" id="accountsReceivable" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">إجمالي حسابات الدفع (الموردين)</label><div class="input-group"><input type="text" class="form-control" id="accountsPayable" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">متوسط فترة تحصيل المستحقات (أيام)</label><input type="text" class="form-control" id="collectionPeriod" placeholder="مثال: 45 يوم"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">متوسط فترة سداد الموردين (أيام)</label><input type="text" class="form-control" id="paymentPeriod" placeholder="مثال: 30 يوم"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3"><label class="form-label">نسبة الديون المتعثرة / المشكوك في تحصيلها</label><div class="input-group"><input type="text" class="form-control" id="badDebtRatio" placeholder="مثال: 5%"><span class="input-group-text bg-light">%</span></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- القسم الثالث: التدفقات النقدية التشغيلية -->
+                        <div class="data-entry-section">
+                            <h4 class="mb-4" style="color: #1e4a3b;"><i class="fas fa-chart-line me-2"></i> القسم الثالث: التدفقات النقدية التشغيلية (آخر 12 شهر)</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">التدفقات النقدية الداخلة من المبيعات</label><div class="input-group"><input type="text" class="form-control" id="cashInflows" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">التدفقات النقدية الخارجة للمصروفات</label><div class="input-group"><input type="text" class="form-control" id="cashOutflows" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3"><label class="form-label"><strong>صافي التدفق النقدي التشغيلي</strong></label><div class="input-group"><input type="text" class="form-control" id="netOperatingCashFlow" placeholder="سيتم حسابه تلقائياً" readonly style="background:#f0f0f0;"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- القسم الرابع: التدفقات النقدية الاستثمارية والتمويلية -->
+                        <div class="data-entry-section">
+                            <h4 class="mb-4" style="color: #1e4a3b;"><i class="fas fa-chart-line me-2"></i> القسم الرابع: التدفقات النقدية الاستثمارية والتمويلية</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">التدفقات من الأنشطة الاستثمارية (صافي)</label><div class="input-group"><input type="text" class="form-control" id="investingCashFlow" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">التدفقات من الأنشطة التمويلية (صافي)</label><div class="input-group"><input type="text" class="form-control" id="financingCashFlow" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3"><label class="form-label"><strong>إجمالي صافي التدفق النقدي</strong></label><div class="input-group"><input type="text" class="form-control" id="totalNetCashFlow" placeholder="سيتم حسابه تلقائياً" readonly style="background:#f0f0f0;"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- القسم الخامس: مؤشرات السيولة -->
+                        <div class="data-entry-section">
+                            <h4 class="mb-4" style="color: #1e4a3b;"><i class="fas fa-chart-simple me-2"></i> القسم الخامس: مؤشرات السيولة</h4>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3"><label class="form-label">الأصول المتداولة</label><div class="input-group"><input type="text" class="form-control" id="currentAssets" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3"><label class="form-label">الخصوم المتداولة</label><div class="input-group"><input type="text" class="form-control" id="currentLiabilities" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3"><label class="form-label">المخزون</label><div class="input-group"><input type="text" class="form-control" id="inventory" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="ratio-card"><div class="ratio-label">نسبة التداول</div><div class="ratio-value" id="currentRatioDisplay">—</div></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="ratio-card"><div class="ratio-label">نسبة السيولة السريعة</div><div class="ratio-value" id="quickRatioDisplay">—</div></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="ratio-card"><div class="ratio-label">النقدية إلى الخصوم المتداولة</div><div class="ratio-value" id="cashToLiabilitiesDisplay">—</div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- القسم السادس: التمويل والائتمان -->
+                        <div class="data-entry-section">
+                            <h4 class="mb-4" style="color: #1e4a3b;"><i class="fas fa-hand-holding-usd me-2"></i> القسم السادس: التمويل والائتمان</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">إجمالي الالتزامات الائتمانية (قروض، تسهيلات)</label><div class="input-group"><input type="text" class="form-control" id="totalCreditFacilities" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">الحدود الائتمانية المتاحة غير المستخدمة</label><div class="input-group"><input type="text" class="form-control" id="unusedCredit" placeholder="القيمة"><span class="input-group-text bg-light currency-symbol">جنيه</span></div></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">متوسط تكلفة الائتمان (معدل الفائدة)</label><div class="input-group"><input type="text" class="form-control" id="creditCost" placeholder="مثال: 12%"><span class="input-group-text bg-light">%</span></div></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3"><label class="form-label">هل توجد التزامات مالية متأخرة السداد؟</label><select class="form-select" id="overduePayments"><option value="">اختر...</option><option value="لا توجد التزامات متأخرة">لا توجد التزامات متأخرة</option><option value="أقل من 30 يوماً">أقل من 30 يوماً</option><option value="30-60 يوماً">30-60 يوماً</option><option value="أكثر من 60 يوماً">أكثر من 60 يوماً</option></select></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- القسم السابع: تحديات السيولة -->
+                        <div class="data-entry-section">
+                            <h4 class="mb-4" style="color: #1e4a3b;"><i class="fas fa-triangle-exclamation me-2"></i> القسم السابع: تحديات السيولة</h4>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3"><label class="form-label">أبرز تحديات السيولة التي تواجه المنشأة</label><textarea class="form-control" id="liquidityChallenges" rows="3" placeholder="اذكر أبرز التحديات المتعلقة بالسيولة والتدفقات النقدية"></textarea></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3"><label class="form-label">الفجوات النقدية الموسمية (إن وجدت)</label><textarea class="form-control" id="cashGaps" rows="3" placeholder="اذكر الفجوات النقدية المتكررة خلال العام"></textarea></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3"><label class="form-label">الحلول المقترحة لتحسين السيولة</label><textarea class="form-control" id="liquiditySolutions" rows="3" placeholder="اذكر المقترحات لتحسين وضع السيولة"></textarea></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- القسم الثامن: معلومات إضافية -->
+                        <div class="data-entry-section">
+                            <h4 class="mb-4" style="color: #1e4a3b;"><i class="fas fa-info-circle me-2"></i> القسم الثامن: معلومات إضافية</h4>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3"><label class="form-label">أي معلومات إضافية حول السيولة والتدفقات النقدية</label><textarea class="form-control" id="additionalInfo" rows="4" placeholder="أي معلومات إضافية ترى أنها مهمة لفهم وضع السيولة الحالي"></textarea></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button class="btn btn-custom btn-lg" onclick="refreshPreview()"><i class="fas fa-sync-alt me-2"></i> تحديث المعاينة</button>
+                            <button class="btn btn-custom btn-lg mx-2" onclick="resetForm()"><i class="fas fa-undo me-2"></i> إعادة تعيين</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Preview -->
+            <div class="tab-pane fade" id="preview" role="tabpanel">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-file-alt me-2"></i> معاينة تقرير وضع السيولة والتدفقات النقدية</div>
+                    <div class="card-body" id="previewContent"></div>
+                </div>
+                <div class="text-center mb-4 no-print">
+                    <button class="btn btn-excel btn-lg mx-2" onclick="exportToExcel()"><i class="fas fa-file-excel me-2"></i> تصدير (Excel)</button>
+                    <button class="btn btn-pdf btn-lg mx-2" onclick="exportToPDF(event)"><i class="fas fa-file-pdf me-2"></i> تصدير التقرير (PDF)</button>
+                    <button class="btn btn-custom btn-lg mx-2" onclick="window.print()"><i class="fas fa-print me-2"></i> طباعة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer no-print">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4"><h5 style="color: #52b788;">تكاليف - حلول أعمال ذكية</h5><p style="color: #e4f2e4;">نقدم خدمات استشارات إعادة الهيكلة وتحليل السيولة والتدفقات النقدية.</p></div>
+                <div class="col-md-4 mb-4"><h5 style="color: #52b788;"><i class="fas fa-address-card me-2"></i>معلومات الاتصال</h5><div class="contact-item"><i class="fas fa-map-marker-alt"></i> القاهرة - مصر</div><div class="contact-item"><i class="fas fa-phone-alt"></i><a href="tel:+201044391177" class="footer-links">+20 104 439 1177</a></div><div class="contact-item"><i class="fas fa-envelope"></i><a href="mailto:info@takalief.com" class="footer-links">info@takalief.com</a></div><div class="contact-item"><i class="fas fa-globe"></i><a href="https://www.takalief.com" class="footer-links" target="_blank">www.takalief.com</a></div></div>
+                <div class="col-md-4 mb-4"><h5 style="color: #52b788;"><i class="fas fa-share-alt me-2"></i>تابعنا على</h5><div class="text-center"><a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a><a href="#" class="social-icon"><i class="fab fa-twitter"></i></a><a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a><a href="#" class="social-icon"><i class="fab fa-instagram"></i></a><a href="#" class="social-icon"><i class="fab fa-youtube"></i></a><a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a></div></div>
+            </div>
+            <hr>
+            <div class="row mt-3"><div class="col-md-6 text-md-start text-center"><p class="mb-0" style="color: #e4f2e4;"><i class="fas fa-copyright me-2" style="color: #52b788;"></i>2026 تكاليف - حلول أعمال ذكية. جميع الحقوق محفوظة</p></div><div class="col-md-6 text-md-end text-center"><a href="#" class="footer-links me-3">سياسة الخصوصية</a><a href="#" class="footer-links me-3">شروط الاستخدام</a><a href="#" class="footer-links">الدعم الفني</a></div></div>
+        </div>
+    </footer>
+
+    <div id="pdf-export-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let selectedCurrency = 'EGP';
+        const currencySymbols = { 'EGP': 'جنيه', 'SAR': 'ريال', 'AED': 'درهم', 'USD': 'دولار' };
+        const currencyNames = { 'EGP': 'جنيه مصري', 'SAR': 'ريال سعودي', 'AED': 'درهم إماراتي', 'USD': 'دولار أمريكي' };
+        
+        document.getElementById('currencySelect').addEventListener('change', function() {
+            selectedCurrency = this.value;
+            const symbol = currencySymbols[selectedCurrency];
+            document.querySelectorAll('.currency-symbol').forEach(el => el.textContent = symbol);
+            updateCalculations();
+        });
+        
+        function updateCalculations() {
+            const cashOnHand = parseFloat(document.getElementById('cashOnHand').value) || 0;
+            const bankBalances = parseFloat(document.getElementById('bankBalances').value) || 0;
+            const timeDeposits = parseFloat(document.getElementById('timeDeposits').value) || 0;
+            const totalLiquidity = cashOnHand + bankBalances + timeDeposits;
+            document.getElementById('totalLiquidity').value = totalLiquidity.toLocaleString();
+            
+            const cashInflows = parseFloat(document.getElementById('cashInflows').value) || 0;
+            const cashOutflows = parseFloat(document.getElementById('cashOutflows').value) || 0;
+            const netOperatingCashFlow = cashInflows - cashOutflows;
+            document.getElementById('netOperatingCashFlow').value = netOperatingCashFlow.toLocaleString();
+            
+            const investingCashFlow = parseFloat(document.getElementById('investingCashFlow').value) || 0;
+            const financingCashFlow = parseFloat(document.getElementById('financingCashFlow').value) || 0;
+            const totalNetCashFlow = netOperatingCashFlow + investingCashFlow + financingCashFlow;
+            document.getElementById('totalNetCashFlow').value = totalNetCashFlow.toLocaleString();
+            
+            const currentAssets = parseFloat(document.getElementById('currentAssets').value) || 0;
+            const currentLiabilities = parseFloat(document.getElementById('currentLiabilities').value) || 0;
+            const inventory = parseFloat(document.getElementById('inventory').value) || 0;
+            
+            if (currentLiabilities > 0) {
+                const currentRatio = (currentAssets / currentLiabilities).toFixed(2);
+                document.getElementById('currentRatioDisplay').innerHTML = currentRatio;
+                const quickAssets = currentAssets - inventory;
+                const quickRatio = (quickAssets / currentLiabilities).toFixed(2);
+                document.getElementById('quickRatioDisplay').innerHTML = quickRatio;
+                const cashToLiabilities = (totalLiquidity / currentLiabilities).toFixed(2);
+                document.getElementById('cashToLiabilitiesDisplay').innerHTML = cashToLiabilities;
+            } else {
+                document.getElementById('currentRatioDisplay').innerHTML = '—';
+                document.getElementById('quickRatioDisplay').innerHTML = '—';
+                document.getElementById('cashToLiabilitiesDisplay').innerHTML = '—';
+            }
+        }
+        
+        function addCalculationListeners() {
+            const calcFields = ['cashOnHand', 'bankBalances', 'timeDeposits', 'cashInflows', 'cashOutflows', 
+                'investingCashFlow', 'financingCashFlow', 'currentAssets', 'currentLiabilities', 'inventory'];
+            calcFields.forEach(fieldId => {
+                const element = document.getElementById(fieldId);
+                if (element) element.addEventListener('input', updateCalculations);
+            });
+        }
+        
+        function getFieldValue(id, defaultValue = '—') {
+            const element = document.getElementById(id);
+            return element && element.value.trim() !== '' ? element.value.trim() : defaultValue;
+        }
+        
+        function getSelectText(id, defaultValue = '—') {
+            const select = document.getElementById(id);
+            if (select && select.options[select.selectedIndex] && select.options[select.selectedIndex].value !== '') {
+                return select.options[select.selectedIndex].text;
+            }
+            return defaultValue;
+        }
+        
+        function refreshPreview() {
+            const previewHtml = `
+                <div class="preview-card"><h4 style="color: #1e4a3b;"><i class="fas fa-building me-2"></i>بيانات المنشأة</h4>
+                <div class="preview-item"><span class="preview-label">اسم المنشأة</span><span class="preview-value">${getFieldValue('companyName')}</span></div>
+                <div class="preview-item"><span class="preview-label">النشاط الرئيسي</span><span class="preview-value">${getFieldValue('businessActivity')}</span></div>
+                <div class="preview-item"><span class="preview-label">السنة المالية الحالية</span><span class="preview-value">${getFieldValue('currentFiscalYear')}</span></div>
+                <div class="preview-item"><span class="preview-label">المسؤول عن السيولة</span><span class="preview-value">${getFieldValue('contactPerson')}</span></div>
+                <div class="preview-item"><span class="preview-label">المسمى الوظيفي</span><span class="preview-value">${getFieldValue('jobTitle')}</span></div>
+                <div class="preview-item"><span class="preview-label">البريد الإلكتروني</span><span class="preview-value">${getFieldValue('clientEmail')}</span></div>
+                <div class="preview-item"><span class="preview-label">رقم الهاتف</span><span class="preview-value">${getFieldValue('clientPhone')}</span></div>
+                <div class="preview-item"><span class="preview-label">العملة</span><span class="preview-value">${currencyNames[selectedCurrency]}</span></div></div>
+                
+                <div class="preview-card"><h4 style="color: #1e4a3b;"><i class="fas fa-coins me-2"></i>المركز النقدي الحالي</h4>
+                <div class="preview-item"><span class="preview-label">الأرصدة النقدية بالصناديق</span><span class="preview-value">${getFieldValue('cashOnHand')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">الأرصدة البنكية</span><span class="preview-value">${getFieldValue('bankBalances')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">شهادات إيداع</span><span class="preview-value">${getFieldValue('timeDeposits')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label"><strong>إجمالي السيولة المتاحة</strong></span><span class="preview-value"><strong>${getFieldValue('totalLiquidity')} ${currencySymbols[selectedCurrency]}</strong></span></div></div>
+                
+                <div class="preview-card"><h4 style="color: #1e4a3b;"><i class="fas fa-file-invoice-dollar me-2"></i>حسابات القبض والمدفوعات</h4>
+                <div class="preview-item"><span class="preview-label">حسابات القبض</span><span class="preview-value">${getFieldValue('accountsReceivable')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">حسابات الدفع</span><span class="preview-value">${getFieldValue('accountsPayable')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">فترة التحصيل</span><span class="preview-value">${getFieldValue('collectionPeriod')} يوم</span></div>
+                <div class="preview-item"><span class="preview-label">فترة السداد</span><span class="preview-value">${getFieldValue('paymentPeriod')} يوم</span></div>
+                <div class="preview-item"><span class="preview-label">نسبة الديون المتعثرة</span><span class="preview-value">${getFieldValue('badDebtRatio')}</span></div></div>
+                
+                <div class="preview-card"><h4 style="color: #1e4a3b;"><i class="fas fa-chart-line me-2"></i>التدفقات النقدية</h4>
+                <div class="preview-item"><span class="preview-label">التدفقات الداخلة</span><span class="preview-value">${getFieldValue('cashInflows')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">التدفقات الخارجة</span><span class="preview-value">${getFieldValue('cashOutflows')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">صافي التدفق التشغيلي</span><span class="preview-value">${getFieldValue('netOperatingCashFlow')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">التدفقات الاستثمارية</span><span class="preview-value">${getFieldValue('investingCashFlow')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">التدفقات التمويلية</span><span class="preview-value">${getFieldValue('financingCashFlow')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label"><strong>صافي التدفق الكلي</strong></span><span class="preview-value"><strong>${getFieldValue('totalNetCashFlow')} ${currencySymbols[selectedCurrency]}</strong></span></div></div>
+                
+                <div class="preview-card"><h4 style="color: #1e4a3b;"><i class="fas fa-chart-simple me-2"></i>مؤشرات السيولة</h4>
+                <div class="preview-item"><span class="preview-label">الأصول المتداولة</span><span class="preview-value">${getFieldValue('currentAssets')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">الخصوم المتداولة</span><span class="preview-value">${getFieldValue('currentLiabilities')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">المخزون</span><span class="preview-value">${getFieldValue('inventory')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">نسبة التداول</span><span class="preview-value" id="previewCurrentRatio">—</span></div>
+                <div class="preview-item"><span class="preview-label">نسبة السيولة السريعة</span><span class="preview-value" id="previewQuickRatio">—</span></div>
+                <div class="preview-item"><span class="preview-label">النقدية إلى الخصوم</span><span class="preview-value" id="previewCashToLiab">—</span></div></div>
+                
+                <div class="preview-card"><h4 style="color: #1e4a3b;"><i class="fas fa-hand-holding-usd me-2"></i>التمويل والائتمان</h4>
+                <div class="preview-item"><span class="preview-label">الالتزامات الائتمانية</span><span class="preview-value">${getFieldValue('totalCreditFacilities')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">الائتمان غير المستخدم</span><span class="preview-value">${getFieldValue('unusedCredit')} ${currencySymbols[selectedCurrency]}</span></div>
+                <div class="preview-item"><span class="preview-label">تكلفة الائتمان</span><span class="preview-value">${getFieldValue('creditCost')}</span></div>
+                <div class="preview-item"><span class="preview-label">التزامات متأخرة</span><span class="preview-value">${getSelectText('overduePayments')}</span></div></div>
+                
+                <div class="preview-card"><h4 style="color: #1e4a3b;"><i class="fas fa-triangle-exclamation me-2"></i>تحديات السيولة</h4>
+                <div class="preview-item"><span class="preview-label">أبرز التحديات</span><span class="preview-value">${getFieldValue('liquidityChallenges')}</span></div>
+                <div class="preview-item"><span class="preview-label">الفجوات النقدية</span><span class="preview-value">${getFieldValue('cashGaps')}</span></div>
+                <div class="preview-item"><span class="preview-label">الحلول المقترحة</span><span class="preview-value">${getFieldValue('liquiditySolutions')}</span></div></div>
+                
+                <div class="preview-card"><h4 style="color: #1e4a3b;"><i class="fas fa-info-circle me-2"></i>معلومات إضافية</h4>
+                <div class="preview-item"><span class="preview-label">ملاحظات</span><span class="preview-value">${getFieldValue('additionalInfo')}</span></div></div>
+                
+                <div class="preview-card text-center"><hr><p style="color: #1e4a3b; font-weight: 600;"><i class="fas fa-check-circle me-2"></i>تم تعبئة الاستبيان بنجاح</p><p class="text-muted small">تاريخ الإصدار: ${new Date().toLocaleDateString('ar-EG')}</p></div>
+            `;
+            document.getElementById('previewContent').innerHTML = previewHtml;
+            
+            const currentAssets = parseFloat(document.getElementById('currentAssets').value) || 0;
+            const currentLiabilities = parseFloat(document.getElementById('currentLiabilities').value) || 0;
+            const inventory = parseFloat(document.getElementById('inventory').value) || 0;
+            const totalLiquidity = parseFloat(document.getElementById('totalLiquidity').value) || 0;
+            
+            if (currentLiabilities > 0) {
+                document.getElementById('previewCurrentRatio').innerHTML = (currentAssets / currentLiabilities).toFixed(2);
+                document.getElementById('previewQuickRatio').innerHTML = ((currentAssets - inventory) / currentLiabilities).toFixed(2);
+                document.getElementById('previewCashToLiab').innerHTML = (totalLiquidity / currentLiabilities).toFixed(2);
+            }
+        }
+        
+        function resetForm() { 
+            if(confirm('هل أنت متأكد من إعادة تعيين جميع البيانات؟')) location.reload(); 
+        }
+        
+        function exportToExcel() {
+            const companyName = getFieldValue('companyName', 'منشأة');
+            const excelData = [
+                ['استبيان وضع السيولة والتدفقات النقدية', 'خدمة الاستشارات المؤقتة لإعادة الهيكلة'],
+                ['تاريخ التقرير', new Date().toLocaleDateString('ar-EG')],
+                ['اسم المنشأة', companyName],
+                ['المسؤول', getFieldValue('contactPerson')],
+                ['العملة', currencyNames[selectedCurrency]],
+                [],
+                ['1. بيانات المنشأة'],
+                ['اسم المنشأة', getFieldValue('companyName')],
+                ['النشاط الرئيسي', getFieldValue('businessActivity')],
+                ['السنة المالية', getFieldValue('currentFiscalYear')],
+                ['المسؤول', getFieldValue('contactPerson')],
+                ['المسمى الوظيفي', getFieldValue('jobTitle')],
+                ['البريد الإلكتروني', getFieldValue('clientEmail')],
+                ['رقم الهاتف', getFieldValue('clientPhone')],
+                [],
+                ['2. المركز النقدي'],
+                ['النقدية بالصناديق', getFieldValue('cashOnHand')],
+                ['الأرصدة البنكية', getFieldValue('bankBalances')],
+                ['شهادات الإيداع', getFieldValue('timeDeposits')],
+                ['إجمالي السيولة', getFieldValue('totalLiquidity')],
+                [],
+                ['3. حسابات القبض والمدفوعات'],
+                ['حسابات القبض', getFieldValue('accountsReceivable')],
+                ['حسابات الدفع', getFieldValue('accountsPayable')],
+                ['فترة التحصيل', getFieldValue('collectionPeriod')],
+                ['فترة السداد', getFieldValue('paymentPeriod')],
+                ['نسبة الديون المتعثرة', getFieldValue('badDebtRatio')],
+                [],
+                ['4. التدفقات النقدية'],
+                ['التدفقات الداخلة', getFieldValue('cashInflows')],
+                ['التدفقات الخارجة', getFieldValue('cashOutflows')],
+                ['صافي التدفق التشغيلي', getFieldValue('netOperatingCashFlow')],
+                ['التدفقات الاستثمارية', getFieldValue('investingCashFlow')],
+                ['التدفقات التمويلية', getFieldValue('financingCashFlow')],
+                ['صافي التدفق الكلي', getFieldValue('totalNetCashFlow')],
+                [],
+                ['5. مؤشرات السيولة'],
+                ['الأصول المتداولة', getFieldValue('currentAssets')],
+                ['الخصوم المتداولة', getFieldValue('currentLiabilities')],
+                ['المخزون', getFieldValue('inventory')],
+                ['نسبة التداول', document.getElementById('currentRatioDisplay').innerHTML],
+                ['نسبة السيولة السريعة', document.getElementById('quickRatioDisplay').innerHTML],
+                ['النقدية إلى الخصوم', document.getElementById('cashToLiabilitiesDisplay').innerHTML],
+                [],
+                ['6. التمويل والائتمان'],
+                ['الالتزامات الائتمانية', getFieldValue('totalCreditFacilities')],
+                ['الائتمان غير المستخدم', getFieldValue('unusedCredit')],
+                ['تكلفة الائتمان', getFieldValue('creditCost')],
+                ['التزامات متأخرة', getSelectText('overduePayments')],
+                [],
+                ['7. تحديات السيولة'],
+                ['أبرز التحديات', getFieldValue('liquidityChallenges')],
+                ['الفجوات النقدية', getFieldValue('cashGaps')],
+                ['الحلول المقترحة', getFieldValue('liquiditySolutions')],
+                [],
+                ['8. معلومات إضافية'],
+                ['ملاحظات', getFieldValue('additionalInfo')],
+                [],
+                ['للتواصل: info@takalief.com | +20 104 439 1177'],
+                ['www.takalief.com']
+            ];
+            
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(excelData);
+            XLSX.utils.book_append_sheet(wb, ws, 'السيولة_والتدفقات');
+            XLSX.writeFile(wb, `Liquidity_CashFlow_${companyName.replace(/\s/g, '_')}_${new Date().toISOString().slice(0,10)}.xlsx`);
+            alert('تم تصدير استبيان Excel بنجاح');
+        }
+        
+        async function exportToPDF(event) {
+            try {
+                const exportBtn = event.target;
+                const originalText = exportBtn.innerHTML;
+                exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> جاري إعداد التقرير...';
+                exportBtn.disabled = true;
+                
+                const pdfContainer = document.getElementById('pdf-export-container');
+                pdfContainer.innerHTML = '';
+                pdfContainer.style.opacity = '1';
+                pdfContainer.style.position = 'absolute';
+                pdfContainer.style.top = '0';
+                pdfContainer.style.left = '0';
+                pdfContainer.style.zIndex = '9999';
+                
+                const companyName = getFieldValue('companyName', 'غير محدد');
+                const contactPerson = getFieldValue('contactPerson', 'غير محدد');
+                const currentDate = new Date().toLocaleDateString('ar-EG');
+                const currencySymbol = currencySymbols[selectedCurrency];
+                
+                const currentRatio = document.getElementById('currentRatioDisplay').innerHTML;
+                const quickRatio = document.getElementById('quickRatioDisplay').innerHTML;
+                const cashToLiab = document.getElementById('cashToLiabilitiesDisplay').innerHTML;
+                
+                const pdfWrapper = document.createElement('div');
+                pdfWrapper.className = 'pdf-wrapper';
+                pdfWrapper.innerHTML = `
+                    <div class="pdf-cover">
+                        <h1>استبيان وضع السيولة والتدفقات النقدية</h1>
+                        <h3>خدمة الاستشارات المؤقتة لإعادة الهيكلة</h3>
+                        <div style="background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; margin-top: 30px; border: 2px solid #52b788;">
+                            <p style="font-size: 18px;"><i class="fas fa-building me-2"></i>المنشأة: ${companyName}</p>
+                            <p style="font-size: 16px;"><i class="fas fa-user me-2"></i>المسؤول: ${contactPerson}</p>
+                            <p style="font-size: 16px;"><i class="fas fa-coins me-2"></i>العملة: ${currencyNames[selectedCurrency]}</p>
+                            <p style="font-size: 16px;"><i class="fas fa-calendar me-2"></i>تاريخ التقرير: ${currentDate}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="page-break-before: always;">
+                        <h2 class="pdf-section-title">بيانات المنشأة</h2>
+                        <table class="pdf-table">
+                            <tr><th style="width: 35%;">البيان</th><th>القيمة</th></tr>
+                            <tr><td><strong>اسم المنشأة</strong></td><td>${getFieldValue('companyName')}</td></tr>
+                            <tr><td><strong>النشاط الرئيسي</strong></td><td>${getFieldValue('businessActivity')}</td></tr>
+                            <tr><td><strong>السنة المالية</strong></td><td>${getFieldValue('currentFiscalYear')}</td></tr>
+                            <tr><td><strong>المسؤول</strong></td><td>${getFieldValue('contactPerson')}</td></tr>
+                            <tr><td><strong>المسمى الوظيفي</strong></td><td>${getFieldValue('jobTitle')}</td></tr>
+                            <tr><td><strong>البريد الإلكتروني</strong></td><td>${getFieldValue('clientEmail')}</td></tr>
+                            <tr><td><strong>رقم الهاتف</strong></td><td>${getFieldValue('clientPhone')}</td></tr>
+                            <tr><td><strong>العملة</strong></td><td>${currencyNames[selectedCurrency]}</td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">المركز النقدي الحالي</h2>
+                        <table class="pdf-table">
+                            <tr><th style="width: 35%;">البيان</th><th>القيمة</th></tr>
+                            <tr><td>النقدية بالصناديق</td><td>${getFieldValue('cashOnHand')} ${currencySymbol}</td></tr>
+                            <tr><td>الأرصدة البنكية</td><td>${getFieldValue('bankBalances')} ${currencySymbol}</td></tr>
+                            <tr><td>شهادات الإيداع</td><td>${getFieldValue('timeDeposits')} ${currencySymbol}</td></tr>
+                            <tr><td><strong>إجمالي السيولة</strong></td><td><strong>${getFieldValue('totalLiquidity')} ${currencySymbol}</strong></td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">حسابات القبض والمدفوعات</h2>
+                        <table class="pdf-table">
+                            <tr><th style="width: 35%;">البيان</th><th>القيمة</th></tr>
+                            <tr><td>حسابات القبض</td><td>${getFieldValue('accountsReceivable')} ${currencySymbol}</td></tr>
+                            <tr><td>حسابات الدفع</td><td>${getFieldValue('accountsPayable')} ${currencySymbol}</td></tr>
+                            <tr><td>فترة التحصيل</td><td>${getFieldValue('collectionPeriod')} يوم</td></tr>
+                            <tr><td>فترة السداد</td><td>${getFieldValue('paymentPeriod')} يوم</td></tr>
+                            <tr><td>نسبة الديون المتعثرة</td><td>${getFieldValue('badDebtRatio')}</td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">التدفقات النقدية</h2>
+                        <table class="pdf-table">
+                            <tr><th style="width: 35%;">البيان</th><th>القيمة</th></tr>
+                            <tr><td>التدفقات الداخلة</td><td>${getFieldValue('cashInflows')} ${currencySymbol}</td></tr>
+                            <tr><td>التدفقات الخارجة</td><td>${getFieldValue('cashOutflows')} ${currencySymbol}</td></tr>
+                            <tr><td>صافي التدفق التشغيلي</td><td>${getFieldValue('netOperatingCashFlow')} ${currencySymbol}</td></tr>
+                            <tr><td>التدفقات الاستثمارية</td><td>${getFieldValue('investingCashFlow')} ${currencySymbol}</td></tr>
+                            <tr><td>التدفقات التمويلية</td><td>${getFieldValue('financingCashFlow')} ${currencySymbol}</td></tr>
+                            <tr><td><strong>صافي التدفق الكلي</strong></td><td><strong>${getFieldValue('totalNetCashFlow')} ${currencySymbol}</strong></td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">مؤشرات السيولة</h2>
+                        <table class="pdf-table">
+                            <tr><th style="width: 35%;">البيان</th><th>القيمة</th></tr>
+                            <tr><td>الأصول المتداولة</td><td>${getFieldValue('currentAssets')} ${currencySymbol}</td></tr>
+                            <tr><td>الخصوم المتداولة</td><td>${getFieldValue('currentLiabilities')} ${currencySymbol}</td></tr>
+                            <tr><td>المخزون</td><td>${getFieldValue('inventory')} ${currencySymbol}</td></tr>
+                            <tr><td>نسبة التداول</td><td>${currentRatio}</td></tr>
+                            <tr><td>نسبة السيولة السريعة</td><td>${quickRatio}</td></tr>
+                            <tr><td>النقدية إلى الخصوم</td><td>${cashToLiab}</td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">التمويل والائتمان</h2>
+                        <table class="pdf-table">
+                            <tr><th style="width: 35%;">البيان</th><th>القيمة</th></tr>
+                            <tr><td>الالتزامات الائتمانية</td><td>${getFieldValue('totalCreditFacilities')} ${currencySymbol}</td></tr>
+                            <tr><td>الائتمان غير المستخدم</td><td>${getFieldValue('unusedCredit')} ${currencySymbol}</td></tr>
+                            <tr><td>تكلفة الائتمان</td><td>${getFieldValue('creditCost')}</td></tr>
+                            <tr><td>التزامات متأخرة</td><td>${getSelectText('overduePayments')}</td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">تحديات السيولة</h2>
+                        <table class="pdf-table">
+                            <tr><th style="width: 35%;">البيان</th><th>القيمة</th></tr>
+                            <tr><td>أبرز التحديات</td><td>${getFieldValue('liquidityChallenges')}</td></tr>
+                            <tr><td>الفجوات النقدية</td><td>${getFieldValue('cashGaps')}</td></tr>
+                            <tr><td>الحلول المقترحة</td><td>${getFieldValue('liquiditySolutions')}</td></tr>
+                        </table>
+                        
+                        <h2 class="pdf-section-title">معلومات إضافية</h2>
+                        <table class="pdf-table">
+                            <tr><th style="width: 35%;">البيان</th><th>القيمة</th></tr>
+                            <tr><td>ملاحظات</td><td>${getFieldValue('additionalInfo')}</td></tr>
+                        </table>
+                    </div>
+                    
+                    <div style="page-break-before: always; margin-top: 40px;">
+                        <div class="pdf-footer">
+                            <div style="font-size: 20px; font-weight: 700; color: #52b788;">تكاليف - حلول أعمال ذكية</div>
+                            <div>القاهرة - مصر | +20 104 439 1177 | info@takalief.com</div>
+                            <hr style="width: 150px; margin: 15px auto; border: 1px solid #52b788;">
+                            <p>تم تعبئة هذا الاستبيان لتحليل وضع السيولة والتدفقات النقدية</p>
+                            <p>تاريخ الإصدار: ${currentDate}</p>
+                            <p style="margin-top: 20px;">توقيع المسؤول: _________________________</p>
+                            <p>جميع الحقوق محفوظة</p>
+                        </div>
+                    </div>
+                `;
+                
+                pdfContainer.appendChild(pdfWrapper);
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const canvas = await html2canvas(pdfContainer, { scale: 2, backgroundColor: '#ffffff', logging: false });
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                pdf.save(`Liquidity_CashFlow_${companyName.replace(/[^\u0600-\u06FFa-zA-Z0-9]/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`);
+                
+                pdfContainer.innerHTML = '';
+                pdfContainer.style.opacity = '0';
+                pdfContainer.style.position = 'fixed';
+                pdfContainer.style.top = '-99999px';
+                
+                exportBtn.innerHTML = originalText;
+                exportBtn.disabled = false;
+                alert('تم تصدير التقرير بنجاح');
+            } catch (error) {
+                alert('حدث خطأ: ' + error.message);
+                const exportBtn = event.target;
+                exportBtn.innerHTML = '<i class="fas fa-file-pdf me-2"></i> تصدير التقرير (PDF)';
+                exportBtn.disabled = false;
+            }
+        }
+        
+        function init() {
+            addCalculationListeners();
+            updateCalculations();
+            refreshPreview();
+            const today = new Date().toISOString().split('T')[0];
+            if (document.getElementById('submissionDate')) document.getElementById('submissionDate').value = today;
+            const symbol = currencySymbols[selectedCurrency];
+            document.querySelectorAll('.currency-symbol').forEach(el => el.textContent = symbol);
+        }
+        
+        window.onload = init;
+    </script>
+</body>
+</html>
